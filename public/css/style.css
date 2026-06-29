@@ -37,7 +37,9 @@ h1, h2, h3 { font-family: var(--font-display); }
 /* Header */
 .site-header { background: var(--coffee); color: #fff; position: sticky; top: 0; z-index: 50; border-bottom: 3px solid var(--amber); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; height: 76px; gap: 20px; }
-.logo { display: flex; flex-direction: column; line-height: 1.1; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { height: 40px; width: auto; flex-shrink: 0; }
+.logo-words { display: flex; flex-direction: column; line-height: 1.1; }
 .logo-mark { font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--amber); letter-spacing: 0.5px; }
 .logo-text { font-size: 11px; letter-spacing: 2.5px; color: #cbb89a; }
 .main-nav { display: flex; gap: 26px; flex: 1; justify-content: center; }
