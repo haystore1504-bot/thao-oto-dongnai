@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('../partials/head', { title: 'Cài đặt website' }) %></head>
+<body class="admin-body">
+<%- include('partials/topbar') %>
+
+<div class="container section">
+  <h1>Cài đặt nội dung website</h1>
+  <p class="settings-hint">Chỉnh sửa banner trang chủ và thông tin liên hệ hiển thị trên toàn bộ website.</p>
+
+  <form class="car-form" method="POST" action="/admin/cai-dat" enctype="multipart/form-data">
+    <h2 class="form-section-title">Banner trang chủ (ảnh tự động chuyển mỗi 3s)</h2>
+
+    <% if (settings.hero_slides && settings.hero_slides.length) { %>
+    <div class="current-images">
+      <% settings.hero_slides.forEach(slide => { %>
+        <div class="current-image-item">
+          <img src="<%= slide.url %>" />
+          <label class="keep-slide-label">
+            <input type="checkbox" name="keepSlide" value="<%= slide.path %>" checked /> Giữ ảnh này
+          </label>
+        </div>
+      <% }) %>
+    </div>
+    <% } else { %>
+      <p class="empty-text">Chưa có ảnh banner nào. Thêm ảnh dưới đây.</p>
+    <% } %>
+
+    <div class="form-row">
+      <label>Thêm ảnh banner mới (có thể chọn nhiều ảnh)</label>
+      <input type="file" name="heroImages" multiple accept="image/*" />
+    </div>
+
+    <h2 class="form-section-title">Thông tin liên hệ</h2>
+    <div class="form-grid">
+      <div class="form-row">
+        <label>Hotline</label>
+        <input type="text" name="hotline" value="<%= settings.hotline %>" required />
+      </div>
+      <div class="form-row">
+        <label>Email</label>
+        <input type="email" name="email" value="<%= settings.email %>" required />
+      </div>
+      <div class="form-row">
+        <label>Địa chỉ</label>
+        <input type="text" name="address" value="<%= settings.address %>" required />
+      </div>
+      <div class="form-row">
+        <label>Giờ làm việc</label>
+        <input type="text" name="workingHours" value="<%= settings.working_hours %>" required />
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary">Lưu thay đổi</button>
+  </form>
+</div>
+</body>
+</html>

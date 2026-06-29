@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('partials/head', { title: 'Bán xe - Thảo Ô Tô Đồng Nai' }) %></head>
+<body>
+<%- include('partials/header') %>
+
+<section class="container section">
+  <h1 class="page-title">Bán xe của bạn cho chúng tôi</h1>
+  <p>Điền thông tin xe của bạn, Thảo Ô Tô Đồng Nai sẽ liên hệ báo giá thu mua trong thời gian sớm nhất.</p>
+
+  <% if (success) { %>
+    <div class="success-box">
+      ✅ Gửi thông tin thành công! Chúng tôi sẽ liên hệ với bạn qua số điện thoại đã cung cấp.
+    </div>
+  <% } else { %>
+    <% if (error) { %><p class="error-text"><%= error %></p><% } %>
+    <form class="car-form" method="POST" action="/ban-xe" enctype="multipart/form-data">
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Họ và tên *</label>
+          <input type="text" name="fullName" required />
+        </div>
+        <div class="form-row">
+          <label>Số điện thoại *</label>
+          <input type="tel" name="phone" required />
+        </div>
+        <div class="form-row">
+          <label>Email (không bắt buộc)</label>
+          <input type="email" name="email" />
+        </div>
+        <div class="form-row">
+          <label>Hãng xe</label>
+          <input type="text" name="brand" />
+        </div>
+        <div class="form-row">
+          <label>Đời xe (năm sản xuất)</label>
+          <input type="number" name="modelYear" />
+        </div>
+        <div class="form-row">
+          <label>Số km đã đi</label>
+          <input type="number" name="mileageKm" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Mô tả thêm về xe (tình trạng, màu xe, giá mong muốn...)</label>
+        <textarea name="description" rows="5"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Ảnh xe (không bắt buộc, có thể chọn nhiều ảnh)</label>
+        <input type="file" name="images" multiple accept="image/*" />
+      </div>
+
+      <button type="submit" class="btn-primary">Gửi thông tin</button>
+    </form>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>
+</body>
+</html>

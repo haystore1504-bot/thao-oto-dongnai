@@ -3,6 +3,7 @@ const express = require("express");
 const cookieSession = require("cookie-session");
 const methodOverride = require("method-override");
 const path = require("path");
+const { getSettings } = require("./utils/settings");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,8 +27,9 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.isAdmin = !!(req.session && req.session.isAdmin);
+  res.locals.settings = await getSettings();
   next();
 });
 

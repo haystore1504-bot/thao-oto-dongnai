@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('../partials/head', { title: 'Yêu cầu bán xe' }) %></head>
+<body class="admin-body">
+<%- include('partials/topbar') %>
+
+<div class="container section">
+  <h1>Yêu cầu bán xe từ khách (<%= requests.length %>)</h1>
+
+  <% if (!requests.length) { %>
+    <p class="empty-text">Chưa có yêu cầu nào.</p>
+  <% } %>
+
+  <% requests.forEach(r => { %>
+    <div class="sell-request-card">
+      <div class="sell-request-main">
+        <% if (r.images && r.images.length) { %>
+          <img class="sell-request-thumb" src="<%= r.images[0].url %>" />
+        <% } %>
+        <div>
+          <h3><%= r.full_name %> — <%= r.phone %></h3>
+          <p class="sell-request-meta">
+            <% if (r.brand) { %>Hãng: <%= r.brand %> &nbsp;<% } %>
+            <% if (r.model_year) { %>Năm: <%= r.model_year %> &nbsp;<% } %>
+            <% if (r.mileage_km) { %>Km: <%= Number(r.mileage_km).toLocaleString('vi-VN') %> &nbsp;<% } %>
+            <% if (r.email) { %>Email: <%= r.email %><% } %>
+          </p>
+          <% if (r.description) { %><p><%= r.description %></p><% } %>
+          <p class="sell-request-date">Gửi lúc: <%= new Date(r.created_at).toLocaleString('vi-VN') %></p>
+        </div>
+      </div>
+
+      <div class="sell-request-actions">
+        <form method="POST" action="/admin/yeu-cau-ban-xe/<%= r.id %>?_method=PUT">
+          <select name="status" onchange="this.form.submit()">
+            <option value="moi" <%= r.status === 'moi' ? 'selected' : '' %>>Mới</option>
+            <option value="da_lien_he" <%= r.status === 'da_lien_he' ? 'selected' : '' %>>Đã liên hệ</option>
+            <option value="da_xu_ly" <%= r.status === 'da_xu_ly' ? 'selected' : '' %>>Đã xử lý</option>
+          </select>
+        </form>
+        <form method="POST" action="/admin/yeu-cau-ban-xe/<%= r.id %>?_method=DELETE" onsubmit="return confirm('Xoá yêu cầu này?')">
+          <button type="submit" class="btn-text-danger">Xoá</button>
+        </form>
+      </div>
+    </div>
+  <% }) %>
+</div>
+</body>
+</html>

@@ -2,10 +2,7 @@
 <html lang="vi">
 <head><%- include('../partials/head', { title: car ? 'Sửa xe' : 'Thêm xe mới' }) %></head>
 <body class="admin-body">
-<div class="admin-topbar">
-  <span>Quản trị Thảo Ô Tô Đồng Nai</span>
-  <a href="/admin" class="link-light">← Quay lại danh sách</a>
-</div>
+<%- include('partials/topbar') %>
 
 <div class="container section">
   <h1><%= car ? 'Sửa thông tin xe' : 'Thêm xe mới' %></h1>

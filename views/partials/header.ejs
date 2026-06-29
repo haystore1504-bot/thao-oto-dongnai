@@ -6,12 +6,13 @@
     </a>
     <nav class="main-nav">
       <a href="/">Trang chủ</a>
-      <a href="/xe">Xe đang bán</a>
+      <a href="/xe">Mua xe</a>
+      <a href="/ban-xe">Bán xe</a>
       <a href="/lien-he">Liên hệ</a>
       <% if (isAdmin) { %>
         <a href="/admin" class="btn-admin">Quản trị</a>
       <% } %>
     </nav>
-    <a href="tel:0900000000" class="btn-hotline">📞 Gọi ngay: 0900.000.000</a>
+    <a href="tel:<%= settings.hotline.replace(/\D/g, '') %>" class="btn-hotline">📞 Gọi ngay: <%= settings.hotline %></a>
   </div>
 </header>

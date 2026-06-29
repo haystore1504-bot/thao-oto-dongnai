@@ -5,6 +5,7 @@ const multer = require("multer");
 const supabase = require("../config/supabase");
 const { requireAdmin } = require("../middleware/auth");
 const { uploadImages, deleteImage } = require("../config/storage");
+const { getSettings, clearSettingsCache } = require("../utils/settings");
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
@@ -123,6 +124,63 @@ router.delete("/xe/:id", async (req, res) => {
   }
   await supabase.from("cars").delete().eq("id", car.id);
   res.redirect("/admin");
+});
+
+router.get("/cai-dat", async (req, res) => {
+  const settings = await getSettings();
+  res.render("admin/settings", { settings });
+});
+
+router.post("/cai-dat", upload.array("heroImages", 8), async (req, res) => {
+  const settings = await getSettings();
+  const newSlides = await uploadImages(req.files);
+  const keepPaths = [].concat(req.body.keepSlide || []);
+  const keptSlides = (settings.hero_slides || []).filter((s) => keepPaths.includes(s.path));
+  const slides = [...keptSlides, ...newSlides];
+
+  const removedSlides = (settings.hero_slides || []).filter((s) => !keepPaths.includes(s.path));
+  for (const s of removedSlides) {
+    await deleteImage(s.path);
+  }
+
+  await supabase
+    .from("site_settings")
+    .update({
+      hero_slides: slides,
+      hotline: req.body.hotline,
+      address: req.body.address,
+      email: req.body.email,
+      working_hours: req.body.workingHours,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", 1);
+
+  clearSettingsCache();
+  res.redirect("/admin/cai-dat");
+});
+
+router.get("/yeu-cau-ban-xe", async (req, res) => {
+  const { data: requests } = await supabase
+    .from("sell_requests")
+    .select("*")
+    .order("created_at", { ascending: false });
+  res.render("admin/sell-requests", { requests: requests || [] });
+});
+
+router.put("/yeu-cau-ban-xe/:id", async (req, res) => {
+  await supabase.from("sell_requests").update({ status: req.body.status }).eq("id", req.params.id);
+  res.redirect("/admin/yeu-cau-ban-xe");
+});
+
+router.delete("/yeu-cau-ban-xe/:id", async (req, res) => {
+  const { data: request } = await supabase.from("sell_requests").select("*").eq("id", req.params.id).single();
+  if (request) {
+    for (const img of request.images || []) {
+      await deleteImage(img.path);
+    }
+  }
+  await supabase.from("sell_requests").delete().eq("id", req.params.id);
+  res.redirect("/admin/yeu-cau-ban-xe");
 });
 
 module.exports = router;

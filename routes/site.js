@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 const supabase = require("../config/supabase");
 const { getYoutubeEmbedUrl } = require("../utils/youtube");
+const { uploadImages } = require("../config/storage");
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
 router.get("/", async (req, res) => {
   const { data: featuredCars } = await supabase
@@ -23,13 +27,17 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/xe", async (req, res) => {
-  const { brand, minPrice, maxPrice, q } = req.query;
-  let query = supabase.from("cars").select("*").order("created_at", { ascending: false });
+  const { brand, minPrice, maxPrice, q, sort } = req.query;
+  let query = supabase.from("cars").select("*");
 
   if (brand) query = query.eq("brand", brand);
   if (q) query = query.ilike("name", `%${q}%`);
   if (minPrice) query = query.gte("price", Number(minPrice));
   if (maxPrice) query = query.lte("price", Number(maxPrice));
+
+  if (sort === "price_asc") query = query.order("price", { ascending: true });
+  else if (sort === "price_desc") query = query.order("price", { ascending: false });
+  else query = query.order("created_at", { ascending: false });
 
   const { data: cars } = await query;
 
@@ -57,6 +65,33 @@ router.get("/xe/:id", async (req, res) => {
 
 router.get("/lien-he", (req, res) => {
   res.render("contact");
+});
+
+router.get("/ban-xe", (req, res) => {
+  res.render("sell-car", { success: false, error: null });
+});
+
+router.post("/ban-xe", upload.array("images", 6), async (req, res) => {
+  const { fullName, phone, email, brand, modelYear, mileageKm, description } = req.body;
+
+  if (!fullName || !phone) {
+    return res.render("sell-car", { success: false, error: "Vui lòng nhập đầy đủ họ tên và số điện thoại." });
+  }
+
+  const images = await uploadImages(req.files);
+
+  await supabase.from("sell_requests").insert({
+    full_name: fullName,
+    phone,
+    email: email || null,
+    brand: brand || null,
+    model_year: modelYear ? Number(modelYear) : null,
+    mileage_km: mileageKm ? Number(mileageKm) : null,
+    description: description || null,
+    images,
+  });
+
+  res.render("sell-car", { success: true, error: null });
 });
 
 module.exports = router;

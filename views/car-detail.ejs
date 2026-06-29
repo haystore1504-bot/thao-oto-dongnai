@@ -33,7 +33,7 @@
         <% if (car.color) { %><tr><td>Màu xe</td><td><%= car.color %></td></tr><% } %>
       </table>
 
-      <a href="tel:0900000000" class="btn-primary btn-block">📞 Gọi tư vấn ngay: 0900.000.000</a>
+      <a href="tel:<%= settings.hotline.replace(/\D/g, '') %>" class="btn-primary btn-block">📞 Gọi tư vấn ngay: <%= settings.hotline %></a>
     </div>
   </div>
 

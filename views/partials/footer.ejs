@@ -6,14 +6,13 @@
     </div>
     <div class="footer-col">
       <h4>Liên hệ</h4>
-      <p>📍 Địa chỉ: Đang cập nhật, Đồng Nai</p>
-      <p>📞 Hotline: 0900.000.000</p>
-      <p>✉️ Email: lienhe@thaootodongnai.vn</p>
+      <p>📍 Địa chỉ: <%= settings.address %></p>
+      <p>📞 Hotline: <%= settings.hotline %></p>
+      <p>✉️ Email: <%= settings.email %></p>
     </div>
     <div class="footer-col">
       <h4>Giờ làm việc</h4>
-      <p>Thứ 2 - Thứ 7: 8:00 - 18:00</p>
-      <p>Chủ nhật: 8:00 - 12:00</p>
+      <p><%= settings.working_hours %></p>
     </div>
   </div>
   <div class="footer-bottom">
