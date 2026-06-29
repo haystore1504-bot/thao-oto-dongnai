@@ -1,0 +1,15 @@
+<a href="/xe/<%= car.id %>" class="car-card">
+  <div class="car-card-img">
+    <img src="<%= car.images[0] ? car.images[0].url : '/images/no-image.svg' %>" alt="<%= car.name %>" loading="lazy" />
+    <% if (car.is_sold) { %><span class="badge badge-sold">Đã bán</span><% } %>
+  </div>
+  <div class="car-card-body">
+    <h3><%= car.name %></h3>
+    <p class="car-price"><%= Number(car.price).toLocaleString('vi-VN') %> đ</p>
+    <ul class="car-specs">
+      <li>📅 <%= car.year %></li>
+      <li>🛣️ <%= Number(car.mileage_km).toLocaleString('vi-VN') %> km</li>
+      <li>⚙️ <%= car.transmission %></li>
+    </ul>
+  </div>
+</a>

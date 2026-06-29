@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('partials/head', { title: car.name + ' - Thảo Ô Tô Đồng Nai' }) %></head>
+<body>
+<%- include('partials/header') %>
+
+<section class="container section car-detail">
+  <div class="car-detail-grid">
+    <div class="car-gallery">
+      <% if (car.images.length) { %>
+        <img id="main-image" class="main-image" src="<%= car.images[0].url %>" alt="<%= car.name %>" />
+        <div class="thumb-list">
+          <% car.images.forEach(img => { %>
+            <img class="thumb" src="<%= img.url %>" onclick="document.getElementById('main-image').src=this.src" />
+          <% }) %>
+        </div>
+      <% } else { %>
+        <img class="main-image" src="/images/no-image.svg" alt="Chưa có ảnh" />
+      <% } %>
+    </div>
+
+    <div class="car-info">
+      <h1><%= car.name %></h1>
+      <p class="car-price-big"><%= Number(car.price).toLocaleString('vi-VN') %> đ</p>
+      <% if (car.is_sold) { %><span class="badge badge-sold">Xe đã bán</span><% } %>
+
+      <table class="spec-table">
+        <tr><td>Hãng xe</td><td><%= car.brand %></td></tr>
+        <tr><td>Đời xe (năm)</td><td><%= car.year %></td></tr>
+        <tr><td>Số km đã đi</td><td><%= Number(car.mileage_km).toLocaleString('vi-VN') %> km</td></tr>
+        <tr><td>Hộp số</td><td><%= car.transmission %></td></tr>
+        <tr><td>Nhiên liệu</td><td><%= car.fuel %></td></tr>
+        <% if (car.color) { %><tr><td>Màu xe</td><td><%= car.color %></td></tr><% } %>
+      </table>
+
+      <a href="tel:0900000000" class="btn-primary btn-block">📞 Gọi tư vấn ngay: 0900.000.000</a>
+    </div>
+  </div>
+
+  <% if (car.description) { %>
+  <div class="car-description">
+    <h2>Mô tả chi tiết</h2>
+    <p><%- car.description.replace(/\n/g, '<br/>') %></p>
+  </div>
+  <% } %>
+
+  <% if (embedUrl) { %>
+  <div class="car-video">
+    <h2>Video giới thiệu xe</h2>
+    <div class="video-wrapper">
+      <iframe src="<%= embedUrl %>" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (relatedCars.length) { %>
+  <div class="related-cars">
+    <h2>Xe cùng hãng</h2>
+    <div class="car-grid">
+      <% relatedCars.forEach(c => { %>
+        <%- include('partials/car-card', { car: c }) %>
+      <% }) %>
+    </div>
+  </div>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>
+</body>
+</html>

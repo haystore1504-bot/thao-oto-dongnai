@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('../partials/head', { title: 'Quản trị - Danh sách xe' }) %></head>
+<body class="admin-body">
+<div class="admin-topbar">
+  <span>Quản trị Thảo Ô Tô Đồng Nai</span>
+  <div>
+    <a href="/" class="link-light">Xem website</a>
+    <form method="POST" action="/admin/logout" style="display:inline">
+      <button type="submit" class="btn-text">Đăng xuất</button>
+    </form>
+  </div>
+</div>
+
+<div class="container section">
+  <div class="admin-header-row">
+    <h1>Danh sách xe (<%= cars.length %>)</h1>
+    <a href="/admin/xe/them" class="btn-primary">+ Thêm xe mới</a>
+  </div>
+
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Ảnh</th><th>Tên xe</th><th>Hãng</th><th>Năm</th><th>Giá</th><th>Trạng thái</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% cars.forEach(car => { %>
+      <tr>
+        <td><img class="admin-thumb" src="<%= car.images[0] ? car.images[0].url : '/images/no-image.svg' %>" /></td>
+        <td><%= car.name %></td>
+        <td><%= car.brand %></td>
+        <td><%= car.year %></td>
+        <td><%= Number(car.price).toLocaleString('vi-VN') %> đ</td>
+        <td><%= car.is_sold ? 'Đã bán' : 'Đang bán' %></td>
+        <td class="admin-actions">
+          <a href="/admin/xe/<%= car.id %>/sua">Sửa</a>
+          <form method="POST" action="/admin/xe/<%= car.id %>?_method=DELETE" onsubmit="return confirm('Xoá xe này?')">
+            <button type="submit" class="btn-text-danger">Xoá</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

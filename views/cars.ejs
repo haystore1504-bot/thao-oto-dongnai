@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('partials/head', { title: 'Xe đang bán - Thảo Ô Tô Đồng Nai' }) %></head>
+<body>
+<%- include('partials/header') %>
+
+<section class="container section">
+  <h1 class="page-title">Xe đang bán</h1>
+
+  <form class="filter-bar" method="GET" action="/xe">
+    <input type="text" name="q" placeholder="Tìm theo tên xe..." value="<%= query.q || '' %>" />
+    <select name="brand">
+      <option value="">Tất cả hãng xe</option>
+      <% brands.forEach(b => { %>
+        <option value="<%= b %>" <%= query.brand === b ? 'selected' : '' %>><%= b %></option>
+      <% }) %>
+    </select>
+    <input type="number" name="minPrice" placeholder="Giá từ" value="<%= query.minPrice || '' %>" />
+    <input type="number" name="maxPrice" placeholder="Giá đến" value="<%= query.maxPrice || '' %>" />
+    <button type="submit" class="btn-primary">Lọc</button>
+  </form>
+
+  <% if (cars.length) { %>
+    <div class="car-grid">
+      <% cars.forEach(car => { %>
+        <%- include('partials/car-card', { car }) %>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="empty-text">Không tìm thấy xe phù hợp.</p>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>
+</body>
+</html>

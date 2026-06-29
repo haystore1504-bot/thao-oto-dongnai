@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('../partials/head', { title: 'Đăng nhập quản trị' }) %></head>
+<body class="admin-body">
+<div class="login-box">
+  <h1>Đăng nhập quản trị</h1>
+  <% if (error) { %><p class="error-text"><%= error %></p><% } %>
+  <form method="POST" action="/admin/login">
+    <label>Tên đăng nhập</label>
+    <input type="text" name="username" required />
+    <label>Mật khẩu</label>
+    <input type="password" name="password" required />
+    <button type="submit" class="btn-primary btn-block">Đăng nhập</button>
+  </form>
+</div>
+</body>
+</html>

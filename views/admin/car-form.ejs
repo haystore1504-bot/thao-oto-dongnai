@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('../partials/head', { title: car ? 'Sửa xe' : 'Thêm xe mới' }) %></head>
+<body class="admin-body">
+<div class="admin-topbar">
+  <span>Quản trị Thảo Ô Tô Đồng Nai</span>
+  <a href="/admin" class="link-light">← Quay lại danh sách</a>
+</div>
+
+<div class="container section">
+  <h1><%= car ? 'Sửa thông tin xe' : 'Thêm xe mới' %></h1>
+
+  <form
+    class="car-form"
+    method="POST"
+    action="<%= car ? '/admin/xe/' + car.id + '?_method=PUT' : '/admin/xe/them' %>"
+    enctype="multipart/form-data"
+  >
+    <div class="form-row">
+      <label>Tên xe (VD: Toyota Vios 1.5G 2020)</label>
+      <input type="text" name="name" value="<%= car ? car.name : '' %>" required />
+    </div>
+
+    <div class="form-grid">
+      <div class="form-row">
+        <label>Hãng xe</label>
+        <input type="text" name="brand" value="<%= car ? car.brand : '' %>" required />
+      </div>
+      <div class="form-row">
+        <label>Đời xe (năm sản xuất)</label>
+        <input type="number" name="year" value="<%= car ? car.year : '' %>" required />
+      </div>
+      <div class="form-row">
+        <label>Số km đã đi</label>
+        <input type="number" name="mileageKm" value="<%= car ? car.mileage_km : '' %>" required />
+      </div>
+      <div class="form-row">
+        <label>Giá bán (VNĐ)</label>
+        <input type="number" name="price" value="<%= car ? car.price : '' %>" required />
+      </div>
+      <div class="form-row">
+        <label>Hộp số</label>
+        <select name="transmission">
+          <option <%= car && car.transmission === 'Số sàn' ? 'selected' : '' %>>Số sàn</option>
+          <option <%= !car || car.transmission === 'Số tự động' ? 'selected' : '' %>>Số tự động</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Nhiên liệu</label>
+        <select name="fuel">
+          <option <%= !car || car.fuel === 'Xăng' ? 'selected' : '' %>>Xăng</option>
+          <option <%= car && car.fuel === 'Dầu (Diesel)' ? 'selected' : '' %>>Dầu (Diesel)</option>
+          <option <%= car && car.fuel === 'Hybrid' ? 'selected' : '' %>>Hybrid</option>
+          <option <%= car && car.fuel === 'Điện' ? 'selected' : '' %>>Điện</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Màu xe</label>
+        <input type="text" name="color" value="<%= car && car.color ? car.color : '' %>" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Mô tả chi tiết</label>
+      <textarea name="description" rows="5"><%= car && car.description ? car.description : '' %></textarea>
+    </div>
+
+    <div class="form-row">
+      <label>Link video YouTube (không bắt buộc)</label>
+      <input type="url" name="youtubeUrl" placeholder="https://www.youtube.com/watch?v=..." value="<%= car && car.youtube_url ? car.youtube_url : '' %>" />
+    </div>
+
+    <div class="form-row">
+      <label>Ảnh xe (chọn nhiều ảnh)</label>
+      <input type="file" name="images" multiple accept="image/*" />
+    </div>
+
+    <% if (car && car.images.length) { %>
+    <div class="current-images">
+      <% car.images.forEach(img => { %>
+        <div class="current-image-item">
+          <img src="<%= img.url %>" />
+          <form method="POST" action="/admin/xe/<%= car.id %>/anh?path=<%= encodeURIComponent(img.path) %>&_method=DELETE" onsubmit="return confirm('Xoá ảnh này?')">
+            <button type="submit" class="btn-text-danger">Xoá ảnh</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <div class="form-row checkbox-row">
+      <label><input type="checkbox" name="isFeatured" <%= car && car.is_featured ? 'checked' : '' %> /> Xe nổi bật (hiển thị ở trang chủ)</label>
+    </div>
+
+    <% if (car) { %>
+    <div class="form-row checkbox-row">
+      <label><input type="checkbox" name="isSold" <%= car.is_sold ? 'checked' : '' %> /> Đã bán</label>
+    </div>
+    <% } %>
+
+    <button type="submit" class="btn-primary"><%= car ? 'Lưu thay đổi' : 'Thêm xe' %></button>
+  </form>
+</div>
+</body>
+</html>
