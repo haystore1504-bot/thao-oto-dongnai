@@ -9,8 +9,16 @@ const { getSettings, clearSettingsCache } = require("../utils/settings");
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
+const SESSION_COOKIE_OPTIONS = {
+  httpOnly: true,
+  signed: true,
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
+  maxAge: 1000 * 60 * 60 * 8,
+};
+
 router.get("/login", (req, res) => {
-  if (req.session.isAdmin) return res.redirect("/admin");
+  if (req.signedCookies.admin_session === "authenticated") return res.redirect("/admin");
   res.render("admin/login", { error: null });
 });
 
@@ -26,12 +34,12 @@ router.post("/login", async (req, res) => {
     return res.render("admin/login", { error: "Sai tên đăng nhập hoặc mật khẩu" });
   }
 
-  req.session.isAdmin = true;
+  res.cookie("admin_session", "authenticated", SESSION_COOKIE_OPTIONS);
   res.redirect("/admin");
 });
 
 router.post("/logout", (req, res) => {
-  req.session = null;
+  res.clearCookie("admin_session");
   res.redirect("/admin/login");
 });
 
