@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('../partials/head', { title: testimonial ? 'Sửa đánh giá' : 'Thêm đánh giá' }) %></head>
+<body class="admin-body">
+<%- include('partials/topbar') %>
+
+<div class="container section">
+  <h1><%= testimonial ? 'Sửa đánh giá' : 'Thêm đánh giá khách hàng' %></h1>
+
+  <form
+    class="car-form"
+    method="POST"
+    action="<%= testimonial ? '/admin/danh-gia/' + testimonial.id + '?_method=PUT' : '/admin/danh-gia/them' %>"
+  >
+    <div class="form-grid">
+      <div class="form-row">
+        <label>Tên khách hàng *</label>
+        <input type="text" name="customerName" value="<%= testimonial ? testimonial.customer_name : '' %>" required />
+      </div>
+      <div class="form-row">
+        <label>Xe đã mua (không bắt buộc)</label>
+        <input type="text" name="carName" value="<%= testimonial && testimonial.car_name ? testimonial.car_name : '' %>" placeholder="VD: Toyota Vios 2020" />
+      </div>
+      <div class="form-row">
+        <label>Số sao đánh giá</label>
+        <select name="rating">
+          <% [5,4,3,2,1].forEach(n => { %>
+            <option value="<%= n %>" <%= testimonial && testimonial.rating === n ? 'selected' : (!testimonial && n === 5 ? 'selected' : '') %>><%= n %> sao</option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Thứ tự hiển thị (số nhỏ hiện trước)</label>
+        <input type="number" name="displayOrder" value="<%= testimonial ? testimonial.display_order : 0 %>" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Nội dung đánh giá *</label>
+      <textarea name="content" rows="4" required><%= testimonial ? testimonial.content : '' %></textarea>
+    </div>
+
+    <button type="submit" class="btn-primary"><%= testimonial ? 'Lưu thay đổi' : 'Thêm đánh giá' %></button>
+  </form>
+</div>
+</body>
+</html>

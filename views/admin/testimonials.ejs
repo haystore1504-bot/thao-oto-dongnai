@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head><%- include('../partials/head', { title: 'Đánh giá khách hàng' }) %></head>
+<body class="admin-body">
+<%- include('partials/topbar') %>
+
+<div class="container section">
+  <div class="admin-header-row">
+    <h1>Đánh giá khách hàng (<%= testimonials.length %>)</h1>
+    <a href="/admin/danh-gia/them" class="btn-primary">+ Thêm đánh giá</a>
+  </div>
+
+  <% if (!testimonials.length) { %>
+    <p class="empty-text">Chưa có đánh giá nào. Thêm đánh giá để hiển thị slide ở trang chủ.</p>
+  <% } %>
+
+  <% testimonials.forEach(t => { %>
+    <div class="testimonial-admin-card">
+      <div>
+        <h3><%= t.customer_name %> <% if (t.car_name) { %>— <%= t.car_name %><% } %></h3>
+        <div class="testimonial-admin-stars"><%= '★'.repeat(t.rating) %><%= '☆'.repeat(5 - t.rating) %></div>
+        <p><%= t.content %></p>
+        <p class="sell-request-meta">Thứ tự hiển thị: <%= t.display_order %></p>
+      </div>
+      <div class="admin-actions">
+        <a href="/admin/danh-gia/<%= t.id %>/sua">Sửa</a>
+        <form method="POST" action="/admin/danh-gia/<%= t.id %>?_method=DELETE" onsubmit="return confirm('Xoá đánh giá này?')">
+          <button type="submit" class="btn-text-danger">Xoá</button>
+        </form>
+      </div>
+    </div>
+  <% }) %>
+</div>
+</body>
+</html>

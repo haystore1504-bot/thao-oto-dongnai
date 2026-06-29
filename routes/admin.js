@@ -191,4 +191,53 @@ router.delete("/yeu-cau-ban-xe/:id", async (req, res) => {
   res.redirect("/admin/yeu-cau-ban-xe");
 });
 
+router.get("/danh-gia", async (req, res) => {
+  const { data: testimonials } = await supabase
+    .from("testimonials")
+    .select("*")
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: false });
+  res.render("admin/testimonials", { testimonials: testimonials || [] });
+});
+
+router.get("/danh-gia/them", (req, res) => {
+  res.render("admin/testimonial-form", { testimonial: null });
+});
+
+router.post("/danh-gia/them", async (req, res) => {
+  await supabase.from("testimonials").insert({
+    customer_name: req.body.customerName,
+    car_name: req.body.carName || null,
+    rating: Number(req.body.rating),
+    content: req.body.content,
+    display_order: Number(req.body.displayOrder) || 0,
+  });
+  res.redirect("/admin/danh-gia");
+});
+
+router.get("/danh-gia/:id/sua", async (req, res) => {
+  const { data: testimonial } = await supabase.from("testimonials").select("*").eq("id", req.params.id).single();
+  if (!testimonial) return res.status(404).render("404");
+  res.render("admin/testimonial-form", { testimonial });
+});
+
+router.put("/danh-gia/:id", async (req, res) => {
+  await supabase
+    .from("testimonials")
+    .update({
+      customer_name: req.body.customerName,
+      car_name: req.body.carName || null,
+      rating: Number(req.body.rating),
+      content: req.body.content,
+      display_order: Number(req.body.displayOrder) || 0,
+    })
+    .eq("id", req.params.id);
+  res.redirect("/admin/danh-gia");
+});
+
+router.delete("/danh-gia/:id", async (req, res) => {
+  await supabase.from("testimonials").delete().eq("id", req.params.id);
+  res.redirect("/admin/danh-gia");
+});
+
 module.exports = router;

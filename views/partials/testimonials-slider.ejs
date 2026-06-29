@@ -1,0 +1,25 @@
+<% if (testimonials.length) { %>
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="section-title">Khách hàng nói gì về chúng tôi</h2>
+    <div class="testimonial-slider" data-interval="5000">
+      <% testimonials.forEach((t, i) => { %>
+        <div class="testimonial-slide <%= i === 0 ? 'active' : '' %>">
+          <div class="testimonial-quote-mark">&ldquo;</div>
+          <div class="testimonial-stars"><%= '★'.repeat(t.rating) %><%= '☆'.repeat(5 - t.rating) %></div>
+          <p class="testimonial-content"><%= t.content %></p>
+          <div class="testimonial-author"><%= t.customer_name %></div>
+          <% if (t.car_name) { %><div class="testimonial-car"><%= t.car_name %></div><% } %>
+        </div>
+      <% }) %>
+    </div>
+    <% if (testimonials.length > 1) { %>
+    <div class="testimonial-dots">
+      <% testimonials.forEach((t, i) => { %>
+        <button class="testimonial-dot <%= i === 0 ? 'active' : '' %>" data-index="<%= i %>" aria-label="Đánh giá <%= i + 1 %>"></button>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+<% } %>

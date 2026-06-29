@@ -23,7 +23,17 @@ router.get("/", async (req, res) => {
     .order("created_at", { ascending: false })
     .limit(8);
 
-  res.render("home", { featuredCars: featuredCars || [], latestCars: latestCars || [] });
+  const { data: testimonials } = await supabase
+    .from("testimonials")
+    .select("*")
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: false });
+
+  res.render("home", {
+    featuredCars: featuredCars || [],
+    latestCars: latestCars || [],
+    testimonials: testimonials || [],
+  });
 });
 
 router.get("/xe", async (req, res) => {
