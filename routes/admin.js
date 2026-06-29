@@ -30,7 +30,8 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("/admin/login"));
+  req.session = null;
+  res.redirect("/admin/login");
 });
 
 router.use(requireAdmin);
