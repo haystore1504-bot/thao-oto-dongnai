@@ -139,33 +139,53 @@ router.get("/cai-dat", async (req, res) => {
   res.render("admin/settings", { settings });
 });
 
-router.post("/cai-dat", upload.array("heroImages", 8), async (req, res) => {
-  const settings = await getSettings();
-  const newSlides = await uploadImages(req.files);
-  const keepPaths = [].concat(req.body.keepSlide || []);
-  const keptSlides = (settings.hero_slides || []).filter((s) => keepPaths.includes(s.path));
-  const slides = [...keptSlides, ...newSlides];
+router.post(
+  "/cai-dat",
+  upload.fields([
+    { name: "heroImages", maxCount: 8 },
+    { name: "logoImage", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    const settings = await getSettings();
+    const heroFiles = (req.files && req.files.heroImages) || [];
+    const logoFiles = (req.files && req.files.logoImage) || [];
 
-  const removedSlides = (settings.hero_slides || []).filter((s) => !keepPaths.includes(s.path));
-  for (const s of removedSlides) {
-    await deleteImage(s.path);
-  }
+    const newSlides = await uploadImages(heroFiles);
+    const keepPaths = [].concat(req.body.keepSlide || []);
+    const keptSlides = (settings.hero_slides || []).filter((s) => keepPaths.includes(s.path));
+    const slides = [...keptSlides, ...newSlides];
 
-  await supabase
-    .from("site_settings")
-    .update({
+    const removedSlides = (settings.hero_slides || []).filter((s) => !keepPaths.includes(s.path));
+    for (const s of removedSlides) {
+      await deleteImage(s.path);
+    }
+
+    const update = {
       hero_slides: slides,
       hotline: req.body.hotline,
       address: req.body.address,
       email: req.body.email,
       working_hours: req.body.workingHours,
       updated_at: new Date().toISOString(),
-    })
-    .eq("id", 1);
+    };
 
-  clearSettingsCache();
-  res.redirect("/admin/cai-dat");
-});
+    if (req.body.removeLogo === "on" && settings.logo_path) {
+      await deleteImage(settings.logo_path);
+      update.logo_url = null;
+      update.logo_path = null;
+    } else if (logoFiles.length) {
+      if (settings.logo_path) await deleteImage(settings.logo_path);
+      const [uploadedLogo] = await uploadImages(logoFiles);
+      update.logo_url = uploadedLogo.url;
+      update.logo_path = uploadedLogo.path;
+    }
+
+    await supabase.from("site_settings").update(update).eq("id", 1);
+
+    clearSettingsCache();
+    res.redirect("/admin/cai-dat");
+  }
+);
 
 router.get("/yeu-cau-ban-xe", async (req, res) => {
   const { data: requests } = await supabase

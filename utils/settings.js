@@ -10,6 +10,8 @@ const DEFAULT_SETTINGS = {
   address: "Đang cập nhật, Đồng Nai",
   email: "lienhe@thaootodongnai.vn",
   working_hours: "Thứ 2 - Thứ 7: 8:00 - 18:00, Chủ nhật: 8:00 - 12:00",
+  logo_url: null,
+  logo_path: null,
 };
 
 async function getSettings() {

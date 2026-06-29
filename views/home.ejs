@@ -22,7 +22,11 @@
       </div>
     </div>
     <div class="logo-badge-wrap">
-      <%- include('partials/logo-badge') %>
+      <% if (settings.logo_url) { %>
+        <img src="<%= settings.logo_url %>" alt="Thảo Ô Tô Đồng Nai" class="logo-badge-img" />
+      <% } else { %>
+        <%- include('partials/logo-badge') %>
+      <% } %>
     </div>
   </div>
 </section>

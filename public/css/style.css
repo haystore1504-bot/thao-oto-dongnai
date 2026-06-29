@@ -75,6 +75,8 @@ h1, h2, h3 { font-family: var(--font-display); }
 .badge-text-main { font-size: 70px; fill: url(#badgeGold); }
 .badge-text-shadow { font-size: 70px; fill: #1d140e; opacity: 0.55; transform: translate(3px, 4px); }
 .badge-subtext { font-size: 24px; letter-spacing: 7px; fill: url(#badgeGold); font-weight: 700; }
+.logo-badge-img { width: 100%; height: auto; display: block; }
+.logo-icon-uploaded { height: 52px; width: auto; }
 
 @media (max-width: 860px) {
   .hero-inner { flex-direction: column; text-align: center; }

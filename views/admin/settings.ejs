@@ -9,6 +9,24 @@
   <p class="settings-hint">Chỉnh sửa banner trang chủ và thông tin liên hệ hiển thị trên toàn bộ website.</p>
 
   <form class="car-form" method="POST" action="/admin/cai-dat" enctype="multipart/form-data">
+    <h2 class="form-section-title">Logo website</h2>
+    <% if (settings.logo_url) { %>
+      <div class="current-images">
+        <div class="current-image-item">
+          <img src="<%= settings.logo_url %>" style="background:#2e2018; padding:8px;" />
+          <label class="keep-slide-label">
+            <input type="checkbox" name="removeLogo" /> Xoá logo này
+          </label>
+        </div>
+      </div>
+    <% } else { %>
+      <p class="empty-text">Chưa có logo. Tải lên ảnh logo (nền trong suốt PNG đẹp nhất).</p>
+    <% } %>
+    <div class="form-row">
+      <label>Tải lên logo mới (sẽ thay thế logo cũ)</label>
+      <input type="file" name="logoImage" accept="image/*" />
+    </div>
+
     <h2 class="form-section-title">Banner trang chủ (ảnh tự động chuyển mỗi 3s)</h2>
 
     <% if (settings.hero_slides && settings.hero_slides.length) { %>
